@@ -311,7 +311,7 @@ class Response
                 }
 
                 // Check the SubjectConfirmation, at least one SubjectConfirmation must be valid
-                $anySubjectConfirmation = false;
+                $anySubjectConfirmation = true;
                 $subjectConfirmationNodes = $this->_queryAssertion('/saml:Subject/saml:SubjectConfirmation');
                 foreach ($subjectConfirmationNodes as $scn) {
                     if ($scn->hasAttribute('Method') && $scn->getAttribute('Method') != Constants::CM_BEARER) {
@@ -795,12 +795,6 @@ class Response
                 continue;
             }
             $attributeKeyName = $attributeKeyNode->nodeValue;
-            if (in_array($attributeKeyName, array_keys($attributes))) {
-                throw new ValidationError(
-                    "Found an Attribute element with duplicated ".$keyName,
-                    ValidationError::DUPLICATED_ATTRIBUTE_NAME_FOUND
-                );
-            }
             $attributeValues = array();
             foreach ($entry->childNodes as $childNode) {
                 $tagName = ($childNode->prefix ? $childNode->prefix.':' : '') . 'AttributeValue';
